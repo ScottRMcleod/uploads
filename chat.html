@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Application</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    #chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #chat-messages {
+      height: 500px;
+      overflow-y: scroll;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f8f8f8;
+    }
+
+    #chat-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <a class="navbar-brand" href="#">
+        <img src="cart-favicon.png" width="30" height="30" alt="Cart Icon">
+        E-commerce Site
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <img src="cart-favicon.png" width="20" height="20" alt="Cart Icon">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  <div class="container mt-5">
+  <div class="jumbotron">
+  </div>
+    <div id="chat-container">
+      <div id="chat-messages" class="mb-3"></div>
+      <input type="text" id="chat-input" class="form-control" placeholder="Type your message">
+    </div>
+  </div>
+
+  <script>
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    let isUser = true;
+
+    function addMessage(message) {
+      const chatMessage = document.createElement('div');
+      chatMessage.classList.add('alert');
+      chatMessage.classList.add(isUser ? 'alert-primary' : 'alert-secondary');
+      chatMessage.textContent = message;
+      chatMessages.appendChild(chatMessage);
+    }
+
+    function simulateResponse(userMessage) {
+      if (userMessage.trim() !== '') {
+        addMessage('You: ' + userMessage);
+        chatInput.value = '';
+        isUser = false;
+        setTimeout(function () {
+          const response = generateResponse(userMessage);
+          addMessage('AI: ' + response);
+          isUser = true;
+        }, 1000);
+      }
+    }
+
+function generateResponse(userMessage) {
+  // Define keyword-based responses
+  const keywordResponses = [
+    { keywords: ['hi', 'hello'], response: "Hi, how are you?" },
+    { keywords: ['how are you', 'how\'s it going'], response: "I'm doing well, thank you!" },
+    { keywords: ['question', 'ask'], response: "Sure, go ahead and ask your question!" },
+    { keywords: ['weather'], response: "The weather is sunny and warm today." },
+    { keywords: ['time'], response: new Date().toLocaleTimeString() },
+    { keywords: ['help', 'assistance'], response: "I'm here to help. How can I assist you?" },
+    { keywords: ['thank'], response: "You're welcome!" },
+    { keywords: ['bye', 'goodbye'], response: "Goodbye! Have a great day!" },
+  ];
+
+  // Search for keyword match in user's message
+  for (const keywordResponse of keywordResponses) {
+    const matchedKeywords = keywordResponse.keywords.filter(keyword =>
+      userMessage.toLowerCase().includes(keyword)
+    );
+
+    if (matchedKeywords.length > 0) {
+      return keywordResponse.response;
+    }
+  }
+
+  // If no specific keyword match, provide a generic response
+  return "I'm sorry, I don't have a specific response for that. Could you please provide more information or ask another question?";
+}
+chatInput.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+    const userMessage = chatInput.value;
+    simulateResponse(userMessage);
+  }
+});
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<section id="contact" class="py-5 bg-light">
+    <div class="container">
+      <h2>Contact Me</h2>
+      <form>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea class="form-control" id="message" rows="5" placeholder="Enter your message"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+      &copy; 2023 My Portfolio
+    </div>
+  </footer>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
