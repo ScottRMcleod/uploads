@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bootstrap Page Builder</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    /* Styles for the page builder */
+    .toolbox {
+      background-color: #f1f1f1;
+      padding: 10px;
+    }
+    .toolbox .item {
+      cursor: move;
+      display: inline-block;
+      margin: 5px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+    .page-content {
+      min-height: 600px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      padding: 10px;
+    }
+    .page-content .droppable {
+      min-height: 600px;
+      border: 1px dashed #ccc;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .page-content .delete-btn {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: #f44336;
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      line-height: 20px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">The Bootstrap  Web Page builder</h1>
+      <p class="lead">We provide top-quality website templates and themes.</p>
+      <a href="#" class="btn btn-primary btn-lg">Get Started</a>
+    </div>
+  </div>
+  <div class="container">
+    <h2>Bootstrap Page Builder</h2>
+<h4>Toolbox</h4>
+    <div class="row">
+      <div class="col-md-4">
+        
+        <div class="toolbox">
+          <div class="item" data-element="card">
+            <i class="fa fa-file-text"></i> Card
+          </div>
+          <div class="item" data-element="button">
+            <i class="fa fa-hand-pointer-o"></i> Button
+          </div>
+          <div class="item" data-element="jumbotron">
+            <i class="fa fa-square-o"></i> Jumbotron
+          </div>
+          <div class="item" data-element="carousel">
+            <i class="fa fa-picture-o"></i> Carousel
+          </div>
+          <div class="item" data-element="form">
+            <i class="fa fa-pencil-square-o"></i> Form
+          </div>
+	  <div class="item" data-element="testimonials">
+            <i class="fa fa-pencil-square-o"></i> Testimonials
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <h4>Page Content</h4>
+        <div class="page-content">
+          <div class="droppable"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script>
+    $(function() {      // Make the toolbox items draggable
+      $(".toolbox .item").draggable({
+        revert: "invalid",
+        helper: "clone"
+      });
+
+      // Make the droppable area accept the dragged items
+      $(".page-content .droppable").droppable({
+        accept: ".toolbox .item",
+        drop: function(event, ui) {
+          var element = ui.helper.data("element");
+          var $droppable = $(this);
+          var $element = createBootstrapElement(element);
+
+          $droppable.append($element);
+        }
+      });
+
+      // Create a Bootstrap element based on the selected item
+      function createBootstrapElement(element) {
+        switch (element) {
+          case "card":
+            return $('<div class="card" style="width: 18rem;"><img src="https://via.placeholder.com/350x200" class="card-img-top" alt="..."><div class="card-body"><h5 class="card-title">Card title</h5><h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6><p>Some quick example text to build on the card title and make up the bulk of the card</p><a href="#" class="card-link">Card link</a><a href="#" class="card-link">Another link</a></div>').addClass("mb-3");
+          case "button":
+            return $('<button class="btn btn-primary">Button</button>').addClass("mr-2");
+          case "jumbotron":
+            return $('<header class="jumbotron jumbotron-fluid"><div class="container"><h1 class="display-4">Jumbotron Content</h1><p class="lead">Welcome to your business.</p><a href="#" class="btn btn-primary btn-lg">Get Started</a></div></header>').addClass("mb-3");
+          case "carousel":
+            return $('<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">' +
+              '<ol class="carousel-indicators">' +
+              '<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>' +
+              '<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>' +
+              '<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>' +
+              '</ol>' +
+              '<div class="carousel-inner">' +
+              '<div class="carousel-item active">' +
+              '<img class="d-block w-100" src="https://via.placeholder.com/800x300" alt="First slide">' +
+              '</div>' +
+              '<div class="carousel-item">' +
+              '<img class="d-block w-100" src="https://via.placeholder.com/800x300" alt="Second slide">' +
+              '</div>' +
+              '<div class="carousel-item">' +
+              '<img class="d-block w-100" src="https://via.placeholder.com/800x300" alt="Third slide">' +
+              '</div>' +
+              '</div>' +
+              '<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">' +
+              '<span class="carousel-control-prev-icon" aria-hidden="true"></span>' +
+              '<span class="sr-only">Previous</span>' +
+              '</a>' +
+              '<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">' +
+              '<span class="carousel-control-next-icon" aria-hidden="true"></span>' +
+              '<span class="sr-only">Next</span>' +
+              '</a>' +
+              '</div>').addClass("mb-3");
+          case "form":
+            return $('<form><div class="form-group">' +
+              '<label for="exampleFormControlInput1">Email address</label>' +
+              '<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">' +
+              '</div>' +
+              '<div class="form-group">' +
+              '<label for="exampleFormControlTextarea1">Example textarea</label>' +
+              '<textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>' +
+              '<div><button type="submit" class="btn btn-primary btn-block">Submit</button></div></div></form>').addClass("mb-3");
+          default:
+            return null;
+        }
+      }
+    });
+  </script>
+ </section>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p>&copy; 2023 Template Monsters</p>
+        </div>
+        <div class="col-md-6">
+          <p class="text-right">Designed by <a href="#">Scott Mcleod</a></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
