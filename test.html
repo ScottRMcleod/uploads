@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Interactive Three.js Scene</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+	background-image: url('background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      canvas { display: block; }
+    </style>
+  </head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+    <script>
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      const groundGeometry = new THREE.PlaneGeometry(10, 10);
+      const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x808080, side: THREE.DoubleSide });
+      const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+      ground.rotation.x = Math.PI / 2;
+      ground.position.y = -0.5;
+      scene.add(ground);
+
+      const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+      const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+      const spheres = [];
+      const numSpheres = 10;
+      for (let i = 0; i < numSpheres; i++) {
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.position.x = Math.random() * 10 - 5;
+        sphere.position.z = Math.random() * 10 - 5;
+        scene.add(sphere);
+        spheres.push(sphere);
+      }
+
+      camera.position.z = 5;
+
+      let score = 0;
+
+      function handleKeyDown(event) {
+        const moveDistance = 0.1;
+
+        switch (event.key) {
+          case 'ArrowUp':
+            cube.position.z -= moveDistance;
+            break;
+          case 'ArrowDown':
+            cube.position.z += moveDistance;
+            break;
+          case 'ArrowLeft':
+            cube.position.x -= moveDistance;
+            break;
+          case 'ArrowRight':
+            cube.position.x += moveDistance;
+            break;
+        }
+      }
+
+      function checkSphereCollision() {
+        for (let i = 0; i < spheres.length; i++) {
+          const sphere = spheres[i];
+          if (sphere.visible && cube.position.distanceTo(sphere.position) < 0.5) {
+            sphere.visible = false;
+            score++;
+            console.log('Score:', score);
+          }
+        }
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        checkSphereCollision();
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener('keydown', handleKeyDown);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.target = cube.position;
+      controls.update();
+    </script>
+  </body>
+</html>
+
+
+
+
