@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #canvas {
+	width: 400px;
+  height: 400px;
+	background-image: url('images.png');
+       background-size: 100% 100%;
+background-position: center;
+    }
+    #score {
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    } 
+.music-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+}
+
+#volume-slider {
+  margin: 0 10px;
+  width: 100px;
+}
+
+#volume-icon,
+#mute-icon {
+  width: 20px;
+  height: 20px;
+}
+
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="600"></canvas>
+  <div id="score"></div>
+
+ <div class="music-controls">
+    <button id="play-btn">Play</button>
+    <button id="pause-btn">Pause</button>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+    <img id="volume-icon" src="path/to/volume-icon.png" alt="Volume Icon">
+    <img id="mute-icon" src="path/to/mute-icon.png" alt="Mute Icon">
+  </div>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const playerImage = new Image();
+    playerImage.src = 'player.png'; // Replace with the path to your player image
+
+    const appleImage = new Image();
+    appleImage.src = 'apple.png'; // Replace with the path to your apple image
+
+    const player = {
+      x: canvas.width / 2,
+      y: canvas.height - 100,
+      width: 80,
+      height: 80,
+      speed: 5,
+      score: 0
+    };
+
+    const apples = [];
+    const gravity = 0.2;
+
+    let leftPressed = false;
+    let rightPressed = false;
+
+    document.addEventListener('keydown', keyDownHandler);
+    document.addEventListener('keyup', keyUpHandler);
+
+    function keyDownHandler(event) {
+      if (event.key === 'ArrowLeft') {
+        leftPressed = true;
+      } else if (event.key === 'ArrowRight') {
+        rightPressed = true;
+      }
+    }
+
+    function keyUpHandler(event) {
+      if (event.key === 'ArrowLeft') {
+        leftPressed = false;
+      } else if (event.key === 'ArrowRight') {
+        rightPressed = false;
+      }
+    }
+
+    function drawPlayer() {
+      ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+    }
+
+    function drawApples() {
+      apples.forEach((apple) => {
+        ctx.drawImage(appleImage, apple.x, apple.y, apple.size, apple.size);
+      });
+    }
+
+    function updatePlayerPosition() {
+      if (leftPressed && player.x > 0) {
+        player.x -= player.speed;
+      } else if (rightPressed && player.x + player.width < canvas.width) {
+        player.x += player.speed;
+      }
+    }
+
+    function createApple() {
+      const size = Math.random() * 30 + 20; // Randomize the size of the apple
+      const x = Math.random() * (canvas.width - size); // Randomize the x position of the apple
+      const y = -size; // Start the apple above the canvas
+      const speed = Math.random() * 2 + 1; // Randomize the falling speed of the apple
+
+      apples.push({ x, y, size, speed });
+    }
+
+    function updateApples() {
+      apples.forEach((apple, index) => {
+        apple.y += apple.speed;
+        if (apple.y + apple.size > canvas.height) {
+          // Remove apples that reach the bottom
+          apples.splice(index, 1);
+        } else if (
+          player.x < apple.x + apple.size &&
+          player.x + player.width > apple.x &&
+          player.y < apple.y + apple.size &&
+          player.y + player.height > apple.y
+        ) {
+          // Increase score and remove caught apples
+          player.score++;
+          apples.splice(index, 1);
+        }
+      });
+    }
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawScore() {
+      ctx.font = '24px Arial';
+      ctx.fillStyle = 'white';
+      ctx.fillText('Score: ' + player.score, 10, 30);
+    }
+
+    function update() {
+      clearCanvas();
+      drawPlayer();
+      drawApples();
+      drawScore();
+
+      updatePlayerPosition();
+      updateApples();
+
+      requestAnimationFrame(update);
+    }
+
+    function startGame() {
+      setInterval(createApple, 1000); // Create a new apple every second
+      update();
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
+
